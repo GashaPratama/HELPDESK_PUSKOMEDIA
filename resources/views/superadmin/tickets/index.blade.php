@@ -39,7 +39,7 @@
       <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
       <select name="status" id="status" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">Semua</option>
-        @php $statuses = ['Di Cek','Diproses','Selesai','Ditolak']; @endphp
+        @php $statuses = ['Diterima','Diproses','Selesai','Ditolak']; @endphp
         @foreach($statuses as $s)
           <option value="{{ $s }}" {{ ($status ?? '') === $s ? 'selected' : '' }}>
             {{ $s }}
@@ -50,7 +50,7 @@
 
     <div>
       <label for="kategori" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-      <select name="kategori" id="kategori" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <select name="kategori" id="kategori" class="w-full border border-gray-300 roun ded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">Semua Kategori</option>
         @foreach($categoryOptions as $id => $name)
           <option value="{{ $id }}" {{ (string)($kategori ?? '') === (string)$id ? 'selected' : '' }}>
@@ -98,7 +98,7 @@
             <td class="px-4 py-3 align-top font-semibold">
               @php
                 $statusColors = [
-                  'Di Cek' => 'text-yellow-600 bg-yellow-100',
+                  'Diterima' => 'text-yellow-600 bg-yellow-100',
                   'Diproses' => 'text-blue-600 bg-blue-100',
                   'Selesai' => 'text-green-600 bg-green-100',
                   'Ditolak' => 'text-red-600 bg-red-100',
@@ -212,7 +212,7 @@
               <span x-text="current.status"
                 class="inline-block px-2 py-1 rounded-md text-white"
                 :class="{
-                  'bg-yellow-500': current.status === 'Di Cek',
+                  'bg-yellow-500': current.status === 'Diterima',
                   'bg-blue-600': current.status === 'Diproses',
                   'bg-green-600': current.status === 'Selesai',
                   'bg-red-600': current.status === 'Ditolak',

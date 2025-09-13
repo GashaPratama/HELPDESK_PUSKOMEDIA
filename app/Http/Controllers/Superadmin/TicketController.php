@@ -46,7 +46,7 @@ class TicketController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:Di Cek,Diproses,Selesai,Ditolak',
+            'status' => 'required|in:Diterima,Diproses,Selesai,Ditolak',
         ]);
 
         // Cari berdasarkan ticket_id ATAU id (fallback)
