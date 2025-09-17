@@ -5,66 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Customer - Puskomedia Helpdesk</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+    .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body class="min-h-screen gradient-bg font-sans">
 
-  <!-- Navbar -->
-  <nav class="bg-blue-600 text-white py-4 shadow">
-    <div class="flex justify-between items-center w-full px-6">
-      <h1 class="text-base sm:text-lg font-semibold">
-        Selamat Datang, {{ auth()->user()->nama_lengkap }}
-      </h1>
-      <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Yakin ingin logout?');">
-        @csrf
-        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow text-sm">
-          🔒 Logout
-        </button>
-      </form>
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur-sm border-b border-slate-200 shadow-sm sticky top-0 z-40">
+    <div class="w-full px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Left Section -->
+        <div class="flex items-center space-x-4">
+          <!-- Toggle Sidebar Button -->
+          <button id="toggleSidebar" class="p-2 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300">
+            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          
+          <!-- Logo and Brand -->
+          <div class="flex items-center space-x-3">
+            <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-8 h-8 rounded-lg" />
+            <div class="hidden sm:block">
+              <h1 class="text-lg font-semibold text-slate-800">Puskomedia Helpdesk</h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Section - Welcome Message (Mobile) -->
+        <div class="flex-1 text-center sm:hidden">
+          <p class="text-sm text-slate-600 truncate">Selamat datang, {{ auth()->user()->nama_lengkap }}</p>
+        </div>
+
+        <!-- Right Section -->
+        <div class="flex items-center space-x-3">
+          <!-- Welcome Message (Desktop) -->
+          <div class="hidden sm:block text-right">
+            <p class="text-sm font-medium text-slate-800">{{ auth()->user()->nama_lengkap }}</p>
+            <p class="text-xs text-slate-500">Customer</p>
+          </div>
+          
+          <!-- Logout Button -->
+          <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Yakin ingin logout?');">
+            @csrf
+            <button type="submit" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              </svg>
+              <span class="hidden sm:inline">Logout</span>
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
-  </nav>
+  </header>
 
   <!-- Layout -->
   <div class="flex min-h-screen">
-
-    <!-- Sidebar -->
-    <aside class="w-1/5 bg-blue-50 p-6 shadow-md flex flex-col items-center">
-
-      <!-- Judul -->
-      <h2 class="text-xl font-bold text-blue-700 mb-6 self-start">Profil</h2>
-
-      <!-- Foto dan Info Pengguna -->
-      <div class="mb-6 text-center w-full">
-        <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-4 border-white shadow-lg ring-2 ring-blue-300 mb-3">
-          <img src="{{ auth()->user()->foto_profil ? asset('storage/' . auth()->user()->foto_profil) : asset('images/profile.png') }}" alt="Foto Profil" class="w-full h-full object-cover">
-        </div>
-        <p class="text-base font-semibold text-gray-800">
-          {{ auth()->user()->nama_lengkap }}
-        </p>
-        <p class="text-sm text-gray-500">
-          {{ auth()->user()->email }}
-        </p>
-        <span class="inline-block mt-2 text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full shadow-sm">
-          👤 Customer
-        </span>
-      </div>
-
-      <!-- Tombol Aksi -->
-      <div class="flex flex-col gap-3 w-full">
-        <a href="{{ route('customer.edit-foto') }}" class="bg-white text-left px-4 py-3 rounded-lg shadow hover:bg-blue-100 transition">
-          🖼️ Edit Foto
-        </a>
-        <a href="{{ route('customer.edit-nama') }}" class="bg-white text-left px-4 py-3 rounded-lg shadow hover:bg-blue-100 transition">
-          ✏️ Edit Nama
-        </a>
-        <a href="{{ route('customer.edit-email') }}" class="bg-white text-left px-4 py-3 rounded-lg shadow hover:bg-blue-100 transition">
-          📧 Edit Email
-        </a>
-        <a href="{{ route('customer.edit-password') }}" class="bg-white text-left px-4 py-3 rounded-lg shadow hover:bg-blue-100 transition">
-          🔒 Edit Password
-        </a>
-      </div>
-
-    </aside>
+    <!-- Sidebar Component -->
+    @include('components.sidebar')
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
@@ -142,6 +148,62 @@
 
     </main>
   </div>
+
+  <script>
+    // Sidebar Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleSidebar = document.getElementById('toggleSidebar');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const closeSidebar = document.getElementById('closeSidebar');
+
+      // Toggle sidebar
+      function toggleSidebarFunction() {
+        sidebar.classList.toggle('-translate-x-full');
+        sidebarOverlay.classList.toggle('hidden');
+        
+        // Prevent body scroll when sidebar is open on mobile
+        if (sidebar.classList.contains('-translate-x-full')) {
+          document.body.style.overflow = 'auto';
+        } else {
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      // Close sidebar
+      function closeSidebarFunction() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+
+      // Event listeners
+      if (toggleSidebar) {
+        toggleSidebar.addEventListener('click', toggleSidebarFunction);
+      }
+
+      if (closeSidebar) {
+        closeSidebar.addEventListener('click', closeSidebarFunction);
+      }
+
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebarFunction);
+      }
+
+      // Close sidebar on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !sidebar.classList.contains('-translate-x-full')) {
+          closeSidebarFunction();
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', function() {
+        // Keep current sidebar state on resize
+        // No automatic behavior change based on screen size
+      });
+    });
+  </script>
 
 </body>
 </html>

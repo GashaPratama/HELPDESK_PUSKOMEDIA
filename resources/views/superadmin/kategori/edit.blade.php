@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Puskomedia Helpdesk - Edit Password</title>
+    <title>Puskomedia Helpdesk - Edit Kategori</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Left Section -->
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('dashboard.customer') }}" class="p-2 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300">
+                    <a href="{{ route('superadmin.kategori.index') }}" class="p-2 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300">
                         <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
@@ -38,7 +38,7 @@
                     <div class="flex items-center space-x-3">
                         <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-8 h-8 rounded-lg" />
                         <div class="hidden sm:block">
-                            <h1 class="text-lg font-semibold text-slate-800">Edit Password</h1>
+                            <h1 class="text-lg font-semibold text-slate-800">Edit Kategori</h1>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                     <!-- User Info -->
                     <div class="hidden sm:block text-right">
                         <p class="text-sm font-medium text-slate-800">{{ auth()->user()->nama_lengkap }}</p>
-                        <p class="text-xs text-slate-500">Customer</p>
+                        <p class="text-xs text-slate-500">Superadmin</p>
                     </div>
                     
                     <!-- Logout Button -->
@@ -69,29 +69,17 @@
     <!-- Main Content -->
     <div class="flex-1 flex items-center justify-center px-6 py-12">
         <div class="w-full max-w-md">
-            <!-- Edit Password Card -->
+            <!-- Edit Category Card -->
             <div class="bg-white rounded-2xl card-shadow p-8">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                     </div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Edit Password</h2>
-                    <p class="text-slate-600">Ubah password akun Anda</p>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Edit Kategori</h2>
+                    <p class="text-slate-600">Ubah informasi kategori</p>
                 </div>
-
-                <!-- Success Message -->
-                @if(session('success'))
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6" role="alert">
-                        <div class="flex">
-                            <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="text-sm font-medium">{{ session('success') }}</span>
-                        </div>
-                    </div>
-                @endif
 
                 <!-- Error Messages -->
                 @if ($errors->any())
@@ -112,40 +100,18 @@
                 @endif
 
                 <!-- Edit Form -->
-                <form method="POST" action="{{ route('customer.update-password') }}" class="space-y-6">
+                <form method="POST" action="{{ route('superadmin.kategori.update', $kategori) }}" class="space-y-6">
                     @csrf
+                    @method('PUT')
                     
                     <div>
-                        <label for="password_lama" class="block text-sm font-medium text-slate-700 mb-2">Password Lama</label>
+                        <label for="nama" class="block text-sm font-medium text-slate-700 mb-2">Nama Kategori</label>
                         <input 
-                            type="password" 
-                            name="password_lama" 
-                            id="password_lama"
-                            placeholder="Masukkan password lama Anda" 
-                            class="w-full px-4 py-3 border border-slate-300 rounded-lg input-focus transition-all duration-200" 
-                            required
-                        >
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Password Baru</label>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            id="password"
-                            placeholder="Masukkan password baru (minimal 8 karakter)" 
-                            class="w-full px-4 py-3 border border-slate-300 rounded-lg input-focus transition-all duration-200" 
-                            required
-                        >
-                    </div>
-
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-2">Konfirmasi Password Baru</label>
-                        <input 
-                            type="password" 
-                            name="password_confirmation" 
-                            id="password_confirmation"
-                            placeholder="Ulangi password baru" 
+                            type="text" 
+                            id="nama" 
+                            name="nama" 
+                            value="{{ old('nama', $kategori->nama) }}"
+                            placeholder="Masukkan nama kategori" 
                             class="w-full px-4 py-3 border border-slate-300 rounded-lg input-focus transition-all duration-200" 
                             required
                         >
@@ -155,17 +121,22 @@
                         type="submit" 
                         class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
                     >
-                        Simpan Perubahan
+                        <span class="flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Simpan Perubahan</span>
+                        </span>
                     </button>
                 </form>
 
-                <!-- Back to Dashboard -->
+                <!-- Back to Categories -->
                 <div class="text-center mt-6">
-                    <a href="{{ route('dashboard.customer') }}" class="text-slate-600 hover:text-slate-800 text-sm font-medium transition-colors flex items-center justify-center space-x-2">
+                    <a href="{{ route('superadmin.kategori.index') }}" class="text-slate-600 hover:text-slate-800 text-sm font-medium transition-colors flex items-center justify-center space-x-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        <span>Kembali ke Dashboard</span>
+                        <span>Kembali ke Daftar Kategori</span>
                     </a>
                 </div>
             </div>
@@ -173,14 +144,23 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-slate-800 text-white">
-        <div class="max-w-7xl mx-auto px-6 py-8">
+    <footer class="bg-slate-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-6 py-12">
             <div class="text-center">
-                <div class="flex items-center justify-center space-x-3 mb-4">
-                    <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-8 h-8 rounded-lg" />
-                    <span class="text-lg font-semibold">Puskomedia Helpdesk</span>
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-10 h-10 rounded-lg shadow-lg" />
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Puskomedia Helpdesk</h3>
+                        <p class="text-slate-300 text-sm">Sistem Manajemen Laporan</p>
+                    </div>
                 </div>
-                <p class="text-slate-400 text-sm">&copy; 2025 Puskomedia. All rights reserved.</p>
+                
+                <div class="border-t border-slate-700 pt-6">
+                    <p class="text-slate-400 text-sm">
+                        &copy; 2025 Puskomedia. All rights reserved. | 
+                        <span class="text-slate-500">Powered by Laravel & Tailwind CSS</span>
+                    </p>
+                </div>
             </div>
         </div>
     </footer>

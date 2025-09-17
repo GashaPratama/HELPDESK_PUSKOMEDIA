@@ -53,9 +53,10 @@
   </div>
 
   {{-- Tombol Aksi Cepat --}}
-  <div class="flex gap-2 mb-6">
-    <a href="{{ route('superadmin.users.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded shadow">Kelola User →</a>
-    <a href="{{ route('superadmin.tickets.index') }}" class="px-4 py-2 bg-indigo-600 text-white rounded shadow">Kelola Tiket →</a>
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a href="{{ route('superadmin.users.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition-colors">Kelola User →</a>
+    <a href="{{ route('superadmin.tickets.index') }}" class="px-4 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition-colors">Kelola Tiket →</a>
+    <a href="{{ route('superadmin.kategori.index') }}" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700 transition-colors">Kelola Kategori →</a>
   </div>
 
   {{-- Tabel 5 Tiket Terbaru --}}

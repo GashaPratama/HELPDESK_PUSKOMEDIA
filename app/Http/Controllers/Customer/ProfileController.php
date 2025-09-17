@@ -92,25 +92,55 @@ class ProfileController extends Controller
     // Proses Update Foto Profil
     public function updateFoto(Request $request)
     {
+        // Debug: Log request data
+        \Log::info('Update Foto Request:', [
+            'hasFile' => $request->hasFile('foto_profil'),
+            'file' => $request->file('foto_profil'),
+            'all' => $request->all()
+        ]);
+
         $request->validate([
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_profil' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $user = Auth::user();
 
-        if ($request->hasFile('foto_profil')) {
-            // Hapus foto lama jika ada
-            if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
-                Storage::disk('public')->delete($user->foto_profil);
+        try {
+            if ($request->hasFile('foto_profil')) {
+                $file = $request->file('foto_profil');
+                
+                // Debug: Log file info
+                \Log::info('File info:', [
+                    'originalName' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mimeType' => $file->getMimeType(),
+                    'isValid' => $file->isValid()
+                ]);
+
+                // Hapus foto lama jika ada
+                if ($user->foto_profil && Storage::disk('public')->exists($user->foto_profil)) {
+                    Storage::disk('public')->delete($user->foto_profil);
+                }
+
+                // Simpan foto baru
+                $path = $file->store('foto_profil', 'public');
+                
+                // Debug: Log path
+                \Log::info('File stored at:', ['path' => $path]);
+                
+                $user->foto_profil = $path;
+                $user->save();
+
+                // Debug: Log user update
+                \Log::info('User updated:', ['foto_profil' => $user->foto_profil]);
+
+                return back()->with('success', 'Foto profil berhasil diperbarui.');
+            } else {
+                return back()->withErrors(['foto_profil' => 'Tidak ada file yang diupload.']);
             }
-
-            // Simpan foto baru
-            $path = $request->file('foto_profil')->store('foto_profil', 'public');
-            $user->foto_profil = $path;
+        } catch (\Exception $e) {
+            \Log::error('Error updating foto:', ['error' => $e->getMessage()]);
+            return back()->withErrors(['foto_profil' => 'Gagal menyimpan foto: ' . $e->getMessage()]);
         }
-
-        $user->save();
-
-        return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 }

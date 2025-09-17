@@ -51,6 +51,9 @@ Route::middleware(['auth', 'role:superadmin'])
             return view('superadmin.dashboard', compact('users', 'recentTickets'));
         })->name('dashboard');
 
+        // Manajemen Kategori
+        Route::resource('kategori', \App\Http\Controllers\Superadmin\KategoriController::class);
+
         // Manajemen User
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');

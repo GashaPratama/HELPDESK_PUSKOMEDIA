@@ -14,7 +14,7 @@
     </div>
   @endif
 
-  <form action="{{ route('superadmin.users.update', $user->id) }}" method="POST" class="space-y-4">
+  <form action="{{ route('superadmin.users.update', $user->id_user) }}" method="POST" class="space-y-4">
     @csrf
     @method('PUT')
 

@@ -34,4 +34,12 @@ class Kategori extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Get the laporans for the kategori.
+     */
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class, 'kategori_id');
+    }
 }
