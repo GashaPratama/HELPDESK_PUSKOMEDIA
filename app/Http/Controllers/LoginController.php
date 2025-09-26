@@ -34,7 +34,7 @@ class LoginController extends Controller
             case 'customer_service':
                 return redirect()->route('dashboard.customerservice');
             case 'teknisi':
-                return redirect()->route('dashboard.teknisi');
+                return redirect()->route('teknisi.dashboard');
             case 'customer':
                 return redirect()->route('dashboard.customer');
             default:

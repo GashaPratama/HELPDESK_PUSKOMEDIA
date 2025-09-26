@@ -57,8 +57,15 @@ class LaporanController extends Controller
     // Halaman Dashboard Customer dengan Laporan
     public function dashboard()
     {
-        $laporan = Laporan::where('user_id', Auth::id())->latest()->get();
-        return view('customer.dashboard', compact('laporan'));
+        $laporan = Laporan::where('user_id', Auth::id())->with(['kategori', 'customer'])->latest()->get();
+        
+        // Hitung statistik
+        $totalLaporan = $laporan->count();
+        $diproses = $laporan->where('status', 'Diproses')->count();
+        $selesai = $laporan->where('status', 'Selesai')->count();
+        $ditolak = $laporan->where('status', 'Ditolak')->count();
+        
+        return view('customer.dashboard', compact('laporan', 'totalLaporan', 'diproses', 'selesai', 'ditolak'));
     }
 
     // Menampilkan seluruh laporan user
@@ -109,8 +116,4 @@ public function update(Request $request, $id)
 
     return redirect()->back()->with('success', 'Laporan berhasil diperbarui.');
 }
-
-
-
-
 }

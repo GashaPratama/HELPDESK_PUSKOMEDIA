@@ -19,6 +19,7 @@ class User extends Authenticatable
         'jenis_kelamin',
         'tanggal_lahir',
         'role',
+        'alamat',
         'foto_profil'
     ];
 }

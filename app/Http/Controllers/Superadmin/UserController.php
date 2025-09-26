@@ -12,7 +12,28 @@ class UserController extends Controller
     // List user (paginate biar ringan)
     public function index(Request $request)
     {
-        $users = User::orderBy('id_user', 'desc')->paginate(10);
+        $query = User::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nama_lengkap', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('no_telpon', 'like', "%{$search}%");
+            });
+        }
+
+        // Role filter
+        if ($request->filled('role')) {
+            $query->where('role', $request->get('role'));
+        }
+
+        $users = $query->orderBy('id_user', 'desc')->paginate(10);
+        
+        // Append query parameters to pagination links
+        $users->appends($request->query());
+        
         return view('superadmin.users.index', compact('users'));
     }
 

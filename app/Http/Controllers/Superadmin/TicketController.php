@@ -61,6 +61,64 @@ class TicketController extends Controller
     }
 
     /**
+     * Soft delete tiket (pindah ke arsip)
+     */
+    public function remove($id)
+    {
+        try {
+            $ticket = Laporan::findOrFail($id);
+            $ticket->delete(); // Soft delete
+
+            return redirect()->route('superadmin.tickets.index')
+                ->with('success', 'Tiket berhasil dipindahkan ke arsip!');
+        } catch (\Exception $e) {
+            return redirect()->route('superadmin.tickets.index')
+                ->with('error', 'Gagal menghapus tiket: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Bulk soft delete tiket
+     */
+    public function bulkDelete(Request $request)
+    {
+        \Log::info('Bulk delete request received', ['request' => $request->all()]);
+        
+        $request->validate([
+            'ticket_ids' => 'required|array',
+            'ticket_ids.*' => 'exists:laporans,id'
+        ]);
+
+        try {
+            $ticketIds = $request->ticket_ids;
+            
+            // Filter out invalid values
+            $ticketIds = array_filter($ticketIds, function($id) {
+                return is_numeric($id) && $id > 0;
+            });
+            
+            \Log::info('Deleting tickets', ['ticket_ids' => $ticketIds]);
+            
+            if (empty($ticketIds)) {
+                return redirect()->route('superadmin.tickets.index')
+                    ->with('error', 'Tidak ada tiket yang valid untuk dihapus!');
+            }
+            
+            $count = Laporan::whereIn('id', $ticketIds)->delete();
+            
+            \Log::info('Tickets deleted successfully', ['count' => $count]);
+
+            return redirect()->route('superadmin.tickets.index')
+                ->with('success', "{$count} tiket berhasil dipindahkan ke arsip!");
+        } catch (\Exception $e) {
+            \Log::error('Error deleting tickets', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            
+            return redirect()->route('superadmin.tickets.index')
+                ->with('error', 'Gagal menghapus tiket: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Opsional: endpoint kategori untuk kebutuhan lain (AJAX, dsb)
      */
     public function listCategories()
@@ -69,5 +127,53 @@ class TicketController extends Controller
         return response()->json(
             Kategori::orderBy('nama')->pluck('nama', 'id')
         );
+    }
+
+    /**
+     * Delete all tickets permanently
+     */
+    public function deleteAll(Request $request)
+    {
+        try {
+            // Get count before deletion for logging
+            $totalCount = Laporan::count();
+            
+            \Log::info('Starting delete all tickets', [
+                'user_id' => auth()->id(),
+                'total_tickets' => $totalCount
+            ]);
+            
+            if ($totalCount == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada laporan yang bisa dihapus!'
+                ]);
+            }
+            
+            // Delete all tickets permanently
+            $deletedCount = Laporan::query()->delete();
+            
+            \Log::info('All tickets deleted successfully', [
+                'deleted_count' => $deletedCount,
+                'user_id' => auth()->id()
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil menghapus {$deletedCount} laporan secara permanen!",
+                'deleted_count' => $deletedCount
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error deleting all tickets', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Laporan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -16,10 +17,14 @@ class Laporan extends Model
         'kategori_id',
         'url_situs',
         'kendala',
-        'lampiran',     // file bukti (foto/dokumen)
+        'lampiran',         // file bukti (foto/dokumen)
         'status',
-        'assigned_to',  // teknisi yang ditugaskan
-        'notes',        // catatan dari CS
+        'note',             // catatan dari admin/CS/teknisi
+        'note_target_role', // role yang dituju untuk note
+        'note_from_role',   // role yang membuat note
+        'note_created_at',  // waktu note dibuat
+        'assigned_to',      // teknisi yang ditugaskan
+        'notes',            // catatan dari CS (legacy)
     ];
 
     /**
@@ -59,7 +64,7 @@ class Laporan extends Model
      */
     public function teknisi()
     {
-        return $this->belongsTo(User::class, 'assigned_to', 'id');
+        return $this->belongsTo(User::class, 'assigned_to', 'id_user');
     }
 
     /**

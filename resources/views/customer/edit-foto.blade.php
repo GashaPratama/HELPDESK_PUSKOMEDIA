@@ -61,11 +61,12 @@
           <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-10 h-10 rounded-lg" />
           <h1 class="text-xl font-semibold text-slate-800">Puskomedia Helpdesk</h1>
         </div>
-        <a href="{{ route('dashboard.customer') }}" class="text-slate-600 hover:text-slate-800 text-sm font-medium transition-colors flex items-center space-x-2">
+        <a href="{{ route('dashboard.customer') }}" 
+           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          <span>Kembali ke Dashboard</span>
+          Kembali ke Dashboard
         </a>
       </div>
     </div>
@@ -213,3 +214,4 @@
 
 </body>
 </html>
+

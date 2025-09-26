@@ -42,7 +42,21 @@
     <header class="bg-white/80 backdrop-blur-sm border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center space-x-3">
-                <img src="{{ asset('img/logo.jpg') }}" alt="Logo Puskomedia" class="w-10 h-10 rounded-lg" />
+                @php
+                    try {
+                        $logo = \App\Models\SystemSetting::where('key', 'login_logo')->first();
+                        $logo = $logo ? $logo->value : null;
+                    } catch (\Exception $e) {
+                        $logo = null;
+                    }
+                @endphp
+                @if($logo)
+                    <img src="{{ asset('storage/' . $logo) }}" alt="Logo Puskomedia" class="w-16 h-16 rounded-lg object-contain border border-gray-200 shadow-sm" />
+                @else
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center border border-gray-200 shadow-sm">
+                        <span class="text-white font-bold text-lg">P</span>
+                    </div>
+                @endif
                 <h1 class="text-xl font-semibold text-slate-800">Puskomedia Helpdesk</h1>
             </div>
         </div>
@@ -134,6 +148,62 @@
             </div>
         </div>
     </footer>
+
+<script>
+// Success notifications
+@if(session('success'))
+  document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: '{{ session('success') }}',
+      timer: 3000,
+      showConfirmButton: false,
+      toast: true,
+      position: 'top-end'
+    });
+  });
+@endif
+
+// Error notifications
+@if(session('error'))
+  document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal!',
+      text: '{{ session('error') }}',
+      confirmButtonText: 'OK'
+    });
+  });
+@endif
+
+// Warning notifications
+@if(session('warning'))
+  document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Peringatan!',
+      text: '{{ session('warning') }}',
+      confirmButtonText: 'OK'
+    });
+  });
+@endif
+
+// Info notifications
+@if(session('info'))
+  document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+      icon: 'info',
+      title: 'Informasi',
+      text: '{{ session('info') }}',
+      timer: 3000,
+      showConfirmButton: false,
+      toast: true,
+      position: 'top-end'
+    });
+  });
+@endif
+</script>
 
 </body>
 </html>
